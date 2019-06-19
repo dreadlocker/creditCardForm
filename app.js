@@ -31,11 +31,21 @@ function clearAllInputs() {
   cardNumberBool = false;
   dateBool = false;
   confirmBtn.classList.add('disabled');
+  confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
 }
 //#endregion
 
 //#region Confirm button action
 const confirmBtn = document.getElementById('confirm');
+
+//#region ignore clicking Confirm button with Enter or Space
+confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
+
+function preventEnterAndSpaceClick() {
+  if (event.keyCode === 13 || event.keyCode === 32) event.preventDefault();
+}
+//#endregion
+
 confirmBtn.addEventListener('click', submitAllInputs);
 
 function submitAllInputs() {
@@ -60,13 +70,21 @@ function validator(reg, inputField) {
     inputField.classList.add('error');
     inputField.classList.remove('passed');
     confirmBtn.classList.add('disabled');
+    confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
   } else {
     inputField.nextElementSibling.classList.add('hidden');
     inputField.classList.remove('error');
     inputField.classList.add('passed');
     (inputField.id === 'owner') ? cardNameBool = true: cvvBool = true;
-    if (cardNameBool && cvvBool && cardNumberBool && dateBool) confirmBtn.classList.remove('disabled');
+    if (cardNameBool && cvvBool && cardNumberBool && dateBool) enableConfirmButton();
   }
+}
+//#endregion
+
+//#region enable Confirm Button
+function enableConfirmButton() {
+  confirmBtn.classList.remove('disabled');
+  confirmBtn.removeEventListener('keydown', preventEnterAndSpaceClick);
 }
 //#endregion
 
@@ -94,19 +112,20 @@ function addWhiteSpaces(element) {
 
 //#region show proper card image
 function checkWhichCardImage(str) {
-  if (str[0] === '3') amexImg.classList.remove('hidden');
-  if (str[0] === '4') visaImg.classList.remove('hidden');
-  if (str[0] === '5') masterImg.classList.remove('hidden');
+  if (str[0] === '3') return amexImg.classList.remove('hidden');
+  if (str[0] === '4') return visaImg.classList.remove('hidden');
+  if (str[0] === '5') return masterImg.classList.remove('hidden');
 }
 //#endregion
 
 //#region card number validation
 cardNumber.addEventListener('input', cardValidationCheck);
+
 function cardValidationCheck() {
   amexImg.classList.add('hidden');
   masterImg.classList.add('hidden');
   visaImg.classList.add('hidden');
-  
+
   addWhiteSpaces(cardNumber);
   checkWhichCardImage(cardNumber.value);
 
@@ -114,18 +133,22 @@ function cardValidationCheck() {
     cardNumber.classList.add('error');
     cardNumber.classList.remove('passed');
     confirmBtn.classList.add('disabled');
+    confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
+    cardNumber.nextElementSibling.classList.remove('hidden');
     return;
   }
 
   cardNumber.classList.remove('error');
   cardNumber.classList.add('passed');
   cardNumberBool = true;
-  if (cardNameBool && cvvBool && cardNumberBool && dateBool) confirmBtn.classList.remove('disabled');
+  cardNumber.nextElementSibling.classList.add('hidden');
+  if (cardNameBool && cvvBool && cardNumberBool && dateBool) enableConfirmButton();
 }
 //#endregion
 
 //#region pated card number validation
 cardNumber.addEventListener('paste', pastedCardNumber);
+
 function pastedCardNumber() {
   const clipboardData = event.clipboardData.getData('Text');
   setTimeout(() => {
@@ -175,6 +198,7 @@ function validationDate() {
     selectedMonth.classList.remove('passed');
     selectedYear.classList.remove('passed');
     confirmBtn.classList.add('disabled');
+    confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
     return;
   }
   selectedMonth.classList.remove('error');
@@ -182,6 +206,6 @@ function validationDate() {
   selectedMonth.classList.add('passed');
   selectedYear.classList.add('passed');
   dateBool = true;
-  if (cardNameBool && cvvBool && cardNumberBool && dateBool) confirmBtn.classList.remove('disabled');
+  if (cardNameBool && cvvBool && cardNumberBool && dateBool) enableConfirmButton();
 }
 //#endregion
