@@ -1,0 +1,135 @@
+#creditCardForm {
+  max-width: 700px;
+  background-color: #fff;
+  margin: 100px auto;
+  overflow: hidden;
+  padding: 25px;
+  color: #4c4e56;
+  -webkit-box-shadow: 0px 0px 33px -1px rgba(0, 0, 0, 0.56);
+  -moz-box-shadow: 0px 0px 33px -1px rgba(0, 0, 0, 0.56);
+  box-shadow: 0px 0px 33px -1px rgba(0, 0, 0, 0.56);
+  border-radius: 0.5em;
+}
+
+#creditCardForm h1 {
+  text-align: center;
+  text-transform: uppercase;
+  font-family: 'Open Sans', sans-serif;
+  color: #4c4e56;
+}
+
+#creditCardForm .payment .form-control {
+  line-height: 40px;
+  height: auto;
+  padding: 0 16px;
+  margin-bottom: 5px;
+}
+
+.payment .displayGroup {
+  display: flex;
+  justify-content: space-between;
+}
+
+#creditCardForm .payment .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+#creditCardForm .payment .btnGroup {
+  display: flex;
+  justify-content: space-around;
+}
+
+#creditCardForm .payment .owner {
+  width: 65%;
+}
+
+#creditCardForm .payment .CVV {
+  width: 30%;
+}
+
+#creditCardForm .payment .cardNumber {
+  width: 100%;
+}
+
+#creditCardForm .payment .btn {
+  margin-top: 3px;
+  font-size: 24px;
+  color: white;
+  border-radius: 0.2em;
+  width: 30%;
+  border: none;
+  line-height: 2em;
+}
+
+#creditCardForm .payment .confirm {
+  background-color: #2ec4a5;
+}
+
+#creditCardForm .payment .clear {
+  background-color: #d61e09;
+}
+
+#creditCardForm .payment select {
+  padding: 10px;
+  margin-right: 15px;
+}
+
+
+/* animation start */
+
+#success {
+  text-align: center;
+  opacity: 0;
+}
+
+.hideWrapper {
+  animation: hideWrapper 1s ease-in-out forwards;
+}
+
+.showSuccess {
+  animation: showSuccess 1s ease-in-out 1s forwards;
+}
+
+@keyframes hideWrapper {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes showSuccess {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+
+/* animation end */
+
+.error {
+  border: 2px solid red;
+}
+
+.passed {
+  border: 2px solid greenyellow;
+}
+
+.errorP {
+  color: red;
+  margin-top: 0;
+}
+
+.hidden {
+  display: none;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
