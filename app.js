@@ -65,7 +65,7 @@ function clearAllInputs() {
   cardNameBool = false;
   cvvBool = false;
   cardNumberBool = false;
-  dateBool = false;
+  // dateBool = false;
   confirmBtn.classList.add('disabled');
   confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
 }
@@ -103,6 +103,7 @@ cvv.addEventListener('input', () => validator(regcvv, cvv));
 function validator(reg, inputField) {
   inputField.value = inputField.value.toUpperCase();
   if (inputField.id === "cvv" && inputField.value.length < 3) {
+    // FIX Confirm bytona trqbva da e disabled na pod 3 simvola
     inputField.classList.remove('error');
     inputField.classList.remove('passed');
     inputField.nextElementSibling.classList.add('hidden');
@@ -122,7 +123,8 @@ function validator(reg, inputField) {
   inputField.classList.remove('error');
   inputField.classList.add('passed');
   (inputField.id === 'owner') ? cardNameBool = true: cvvBool = true;
-  if (cardNameBool && cvvBool && cardNumberBool && dateBool) enableConfirmButton();
+  if (cardNameBool && cvvBool && cardNumberBool) enableConfirmButton();
+  // if (cardNameBool && cvvBool && cardNumberBool && dateBool) enableConfirmButton();
 }
 //#endregion
 
@@ -137,7 +139,7 @@ function enableConfirmButton() {
 let cardNameBool = false;
 let cvvBool = false;
 let cardNumberBool = false;
-let dateBool = false;
+// let dateBool = false;
 //#endregion
 
 //#region card Images
@@ -189,7 +191,8 @@ function cardValidationCheck() {
   cardNumber.classList.add('passed');
   cardNumberBool = true;
   cardNumber.nextElementSibling.classList.add('hidden');
-  if (cardNameBool && cvvBool && cardNumberBool && dateBool) enableConfirmButton();
+  if (cardNameBool && cvvBool && cardNumberBool) enableConfirmButton();
+  // if (cardNameBool && cvvBool && cardNumberBool && dateBool) enableConfirmButton();
 }
 //#endregion
 
@@ -250,7 +253,8 @@ function validationDate() {
   selectedYear.classList.remove('error');
   selectedMonth.classList.add('passed');
   selectedYear.classList.add('passed');
-  dateBool = true;
-  if (cardNameBool && cvvBool && cardNumberBool && dateBool) enableConfirmButton();
+  // dateBool = true;
+  if (cardNameBool && cvvBool && cardNumberBool) enableConfirmButton();
+  // if (cardNameBool && cvvBool && cardNumberBool && dateBool) enableConfirmButton();
 }
 //#endregion
