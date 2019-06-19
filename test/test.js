@@ -6,13 +6,13 @@ const assert = chai.assert;
 
 describe('CONFIRM PURCHASE PROJECT:', function() {
   describe('Labels:', function() {
-    describe('Name on Card', function() {
+    describe('Card Holder Name', function() {
       const ownerLabel = document.getElementById('ownerLabel');
       it('owner label should exist', function() {
         assert.notEqual(ownerLabel, null);
       });
       it('owner label should have text', function() {
-        assert.equal(ownerLabel.innerHTML, 'Name on Card');
+        assert.equal(ownerLabel.innerHTML, 'Card Holder Name');
       });
     });
     describe('CVV', function() {
@@ -95,11 +95,11 @@ describe('CONFIRM PURCHASE PROJECT:', function() {
       it('should be a string', function() {
         assert.equal(typeof(dateYear[0].innerHTML), 'string');
       });
-      it('should be equal 2019', function() {
-        assert.equal(dateYear[0].innerHTML, '2019');
+      it('should be equal 2017', function() {
+        assert.equal(dateYear[0].innerHTML, '2017');
       });
-      it('should have 9 options', function() {
-        assert.equal(dateYear.childElementCount, '9');
+      it('should have 11 options', function() {
+        assert.equal(dateYear.childElementCount, '11');
       });
       it('last options should be 2027', function() {
         assert.equal(dateYear[dateYear.length - 1].innerHTML, '2027');

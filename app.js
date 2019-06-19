@@ -1,3 +1,39 @@
+const getCurrentMounth = (new Date().getMonth()).toString();
+const currentYear = (new Date().getFullYear()).toString();
+
+//#region select current month on page load
+(function selectCurrentMonth() {
+  const selectedMonth = document.getElementById('month');
+  const HTMLOptionsCollectionArr = selectedMonth.options;
+
+  for (let i = 0; i < HTMLOptionsCollectionArr.length; i++) {
+    const option = HTMLOptionsCollectionArr[i];
+    if (option.value === getCurrentMounth) {
+      selectedMonth.options[i].selected = 'selected';
+      break;
+    }
+    option.setAttribute('disabled', 'disabled');
+  }
+  return selectedMonth.options[getCurrentMounth].selected = "selected";
+})();
+//#endregion
+
+//#region select current year on page load
+(function selectCurrentYear() {
+  const selectedYear = document.getElementById('year');
+  const HTMLOptionsCollectionArr = selectedYear.options;
+
+  for (let i = 0; i < HTMLOptionsCollectionArr.length; i++) {
+    const option = HTMLOptionsCollectionArr[i];
+    if (option.value === currentYear) {
+      selectedYear.options[i].selected = 'selected';
+      break;
+    }
+    option.setAttribute('disabled', 'disabled');
+  }
+})();
+//#endregion
+
 //#region animation
 const creditCardFormWrapper = document.getElementById('creditCardForm');
 const success = document.getElementById('success');
@@ -65,19 +101,28 @@ cardName.addEventListener('input', () => validator(regName, cardName));
 cvv.addEventListener('input', () => validator(regcvv, cvv));
 
 function validator(reg, inputField) {
+  inputField.value = inputField.value.toUpperCase();
+  if (inputField.id === "cvv" && inputField.value.length < 3) {
+    inputField.classList.remove('error');
+    inputField.classList.remove('passed');
+    inputField.nextElementSibling.classList.add('hidden');
+    return;
+  }
+
   if (!reg.test(inputField.value)) {
     inputField.nextElementSibling.classList.remove('hidden');
     inputField.classList.add('error');
     inputField.classList.remove('passed');
     confirmBtn.classList.add('disabled');
     confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
-  } else {
-    inputField.nextElementSibling.classList.add('hidden');
-    inputField.classList.remove('error');
-    inputField.classList.add('passed');
-    (inputField.id === 'owner') ? cardNameBool = true: cvvBool = true;
-    if (cardNameBool && cvvBool && cardNumberBool && dateBool) enableConfirmButton();
+    return;
   }
+
+  inputField.nextElementSibling.classList.add('hidden');
+  inputField.classList.remove('error');
+  inputField.classList.add('passed');
+  (inputField.id === 'owner') ? cardNameBool = true: cvvBool = true;
+  if (cardNameBool && cvvBool && cardNumberBool && dateBool) enableConfirmButton();
 }
 //#endregion
 
@@ -119,15 +164,17 @@ function checkWhichCardImage(str) {
 //#endregion
 
 //#region card number validation
-cardNumber.addEventListener('input', cardValidationCheck);
+cardNumber.addEventListener('keyup', cardValidationCheck);
 
 function cardValidationCheck() {
   amexImg.classList.add('hidden');
   masterImg.classList.add('hidden');
   visaImg.classList.add('hidden');
-
-  addWhiteSpaces(cardNumber);
+  
   checkWhichCardImage(cardNumber.value);
+
+  if (event.keyCode !== 8) addWhiteSpaces(cardNumber);
+  if(cardNumber.value.length < 13) return;
 
   if (!luhnCheck(cardNumber)) {
     cardNumber.classList.add('error');
@@ -185,9 +232,7 @@ expirationDate.addEventListener('click', validationDate);
 function validationDate() {
   const selectedMonth = document.getElementById('month');
   const selectedYear = document.getElementById('year');
-  const getCurrentMounth = new Date().getMonth();
   const currentMonth = (getCurrentMounth.toString().length === 1) ? `0${getCurrentMounth + 1}` : getCurrentMounth + 1;
-  const currentYear = new Date().getFullYear();
   const currentMilliseconds = (new Date(`${currentMonth}/01//${currentYear}`).getTime());
   const selectedMilliseconds = (new Date(`${selectedMonth.value}/01//${selectedYear.value}`).getTime());
   const nextFiveYearsInMilliseconds = 159168240000;
