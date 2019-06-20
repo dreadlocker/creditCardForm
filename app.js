@@ -176,7 +176,7 @@ function checkWhichCardImage(str) {
 //#endregion
 
 //#region card number validation
-cardNumber.addEventListener('keydown', cardValidationCheck);
+cardNumber.addEventListener('input', cardValidationCheck);
 
 function cardValidationCheck() {
   amexImg.classList.add('hidden');
@@ -186,7 +186,7 @@ function cardValidationCheck() {
   checkWhichCardImage(cardNumber.value);
 
   if (cardNumber.value.length > 19) cardNumber.value = cardNumber.value.slice(0, 19);
-  if (event.keyCode !== 8) addWhiteSpaces(cardNumber);
+  if (event.inputType !== 'deleteContentBackward') addWhiteSpaces(cardNumber);
   if (cardNumber.value.length < 13) return removeBorderAndErrorMessahe(cardNumber);
 
   if (!luhnCheck(cardNumber)) {
