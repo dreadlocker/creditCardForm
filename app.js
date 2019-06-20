@@ -21,7 +21,7 @@ function selectCurrentMonth() {
   const HTMLOptionsCollectionArr = selectedMonth.options;
   const getCurrentMounth = new Date().getMonth().toString();
   const currentYear = new Date().getFullYear().toString();
-  // const selectedYear = document.getElementById('year');
+
   for (let i = 0; i < HTMLOptionsCollectionArr.length; i++) {
     const option = HTMLOptionsCollectionArr[i];
     if (option.value === getCurrentMounth) {
@@ -30,7 +30,6 @@ function selectCurrentMonth() {
     }
 
     option.setAttribute('disabled', 'disabled');
-    // if(+selectedYear.value === 2019) option.setAttribute('disabled', 'disabled');
   }
   return selectedMonth.options[getCurrentMounth].selected = "selected";
 };
@@ -68,7 +67,6 @@ function clearAllInputs() {
   cardNameBool = false;
   cvvBool = false;
   cardNumberBool = false;
-  // dateBool = false;
   confirmBtn.classList.add('disabled');
   confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
 }
@@ -104,11 +102,14 @@ cardName.addEventListener('input', () => validator(regName, cardName));
 cvv.addEventListener('input', () => validator(regcvv, cvv));
 
 function validator(reg, inputField) {
+  if (inputField.value === '') {
+    removeBorderAndErrorMessahe(inputField);
+    return;
+  }
+
   inputField.value = inputField.value.toUpperCase();
   if (inputField.id === "cvv" && inputField.value.length < 3) {
-    inputField.classList.remove('error');
-    inputField.classList.remove('passed');
-    inputField.nextElementSibling.classList.add('hidden');
+    removeBorderAndErrorMessahe(inputField);
     confirmBtn.classList.add('disabled');
     return;
   }
@@ -127,7 +128,14 @@ function validator(reg, inputField) {
   inputField.classList.add('passed');
   (inputField.id === 'owner') ? cardNameBool = true: cvvBool = true;
   if (cardNameBool && cvvBool && cardNumberBool) enableConfirmButton();
-  // if (cardNameBool && cvvBool && cardNumberBool && dateBool) enableConfirmButton();
+}
+//#endregion
+
+//#region 
+function removeBorderAndErrorMessahe(inputField) {
+  inputField.classList.remove('error');
+  inputField.classList.remove('passed');
+  inputField.nextElementSibling.classList.add('hidden');
 }
 //#endregion
 
@@ -142,7 +150,6 @@ function enableConfirmButton() {
 let cardNameBool = false;
 let cvvBool = false;
 let cardNumberBool = false;
-// let dateBool = false;
 //#endregion
 
 //#region card Images
@@ -169,7 +176,7 @@ function checkWhichCardImage(str) {
 //#endregion
 
 //#region card number validation
-cardNumber.addEventListener('keyup', cardValidationCheck);
+cardNumber.addEventListener('input', cardValidationCheck);
 
 function cardValidationCheck() {
   amexImg.classList.add('hidden');
@@ -178,8 +185,9 @@ function cardValidationCheck() {
 
   checkWhichCardImage(cardNumber.value);
 
+  if (cardNumber.value.length > 19) cardNumber.value = cardNumber.value.slice(0, 19);
   if (event.keyCode !== 8) addWhiteSpaces(cardNumber);
-  if (cardNumber.value.length < 13) return;
+  if (cardNumber.value.length < 13) return removeBorderAndErrorMessahe(cardNumber);
 
   if (!luhnCheck(cardNumber)) {
     cardNumber.classList.add('error');
@@ -195,7 +203,6 @@ function cardValidationCheck() {
   cardNumberBool = true;
   cardNumber.nextElementSibling.classList.add('hidden');
   if (cardNameBool && cvvBool && cardNumberBool) enableConfirmButton();
-  // if (cardNameBool && cvvBool && cardNumberBool && dateBool) enableConfirmButton();
 }
 //#endregion
 
@@ -215,7 +222,7 @@ function pastedCardNumber() {
 function luhnCheck(el) {
   if (el.value === '') return;
 
-  const elValue = el.value.replace(/\s/g, '')
+  const elValue = el.value.replace(/\s/g, '');
   if (elValue.length >= 12) {
     return elValue.split('').reduceRight((acc, value, index, arr) => {
       let newValue = +value;
@@ -261,9 +268,7 @@ function validationDate() {
   selectedYear.classList.remove('error');
   selectedMonth.classList.add('passed');
   selectedYear.classList.add('passed');
-  // dateBool = true;
   if (cardNameBool && cvvBool && cardNumberBool) enableConfirmButton();
-  // if (cardNameBool && cvvBool && cardNumberBool && dateBool) enableConfirmButton();
 }
 //#endregion
 
