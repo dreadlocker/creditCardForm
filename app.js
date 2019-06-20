@@ -20,7 +20,7 @@ function selectCurrentMonth() {
   const selectedMonth = document.getElementById('month');
   const HTMLOptionsCollectionArr = selectedMonth.options;
   const getCurrentMounth = new Date().getMonth().toString();
-  const currentYear = new Date().getFullYear().toString();
+  // const currentYear = new Date().getFullYear().toString();
 
   for (let i = 0; i < HTMLOptionsCollectionArr.length; i++) {
     const option = HTMLOptionsCollectionArr[i];
@@ -32,7 +32,7 @@ function selectCurrentMonth() {
     option.setAttribute('disabled', 'disabled');
   }
   return selectedMonth.options[getCurrentMounth].selected = "selected";
-};
+}
 selectCurrentMonth();
 //#endregion
 
@@ -176,7 +176,7 @@ function checkWhichCardImage(str) {
 //#endregion
 
 //#region card number validation
-cardNumber.addEventListener('input', cardValidationCheck);
+cardNumber.addEventListener('keydown', cardValidationCheck);
 
 function cardValidationCheck() {
   amexImg.classList.add('hidden');
