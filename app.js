@@ -1,27 +1,8 @@
-const getCurrentMounth = (new Date().getMonth()).toString();
-const currentYear = (new Date().getFullYear()).toString();
-
-//#region select current month on page load
-(function selectCurrentMonth() {
-  const selectedMonth = document.getElementById('month');
-  const HTMLOptionsCollectionArr = selectedMonth.options;
-
-  for (let i = 0; i < HTMLOptionsCollectionArr.length; i++) {
-    const option = HTMLOptionsCollectionArr[i];
-    if (option.value === getCurrentMounth) {
-      selectedMonth.options[i].selected = 'selected';
-      break;
-    }
-    option.setAttribute('disabled', 'disabled');
-  }
-  return selectedMonth.options[getCurrentMounth].selected = "selected";
-})();
-//#endregion
-
 //#region select current year on page load
 (function selectCurrentYear() {
   const selectedYear = document.getElementById('year');
   const HTMLOptionsCollectionArr = selectedYear.options;
+  const currentYear = new Date().getFullYear().toString();
 
   for (let i = 0; i < HTMLOptionsCollectionArr.length; i++) {
     const option = HTMLOptionsCollectionArr[i];
@@ -32,6 +13,28 @@ const currentYear = (new Date().getFullYear()).toString();
     option.setAttribute('disabled', 'disabled');
   }
 })();
+//#endregion
+
+//#region select current month on page load
+function selectCurrentMonth() {
+  const selectedMonth = document.getElementById('month');
+  const HTMLOptionsCollectionArr = selectedMonth.options;
+  const getCurrentMounth = new Date().getMonth().toString();
+  const currentYear = new Date().getFullYear().toString();
+  // const selectedYear = document.getElementById('year');
+  for (let i = 0; i < HTMLOptionsCollectionArr.length; i++) {
+    const option = HTMLOptionsCollectionArr[i];
+    if (option.value === getCurrentMounth) {
+      selectedMonth.options[i].selected = 'selected';
+      break;
+    }
+
+    option.setAttribute('disabled', 'disabled');
+    // if(+selectedYear.value === 2019) option.setAttribute('disabled', 'disabled');
+  }
+  return selectedMonth.options[getCurrentMounth].selected = "selected";
+};
+selectCurrentMonth();
 //#endregion
 
 //#region animation
@@ -233,8 +236,13 @@ const expirationDate = document.getElementById('expiration-date');
 expirationDate.addEventListener('click', validationDate);
 
 function validationDate() {
-  const selectedMonth = document.getElementById('month');
   const selectedYear = document.getElementById('year');
+  const selectedMonth = document.getElementById('month');
+  const currentYear = new Date().getFullYear().toString();
+
+  disableOrEnableMonth(selectedYear, selectedMonth, currentYear);
+
+  const getCurrentMounth = new Date().getMonth().toString();
   const currentMonth = (getCurrentMounth.toString().length === 1) ? `0${getCurrentMounth + 1}` : getCurrentMounth + 1;
   const currentMilliseconds = (new Date(`${currentMonth}/01//${currentYear}`).getTime());
   const selectedMilliseconds = (new Date(`${selectedMonth.value}/01//${selectedYear.value}`).getTime());
@@ -256,5 +264,24 @@ function validationDate() {
   // dateBool = true;
   if (cardNameBool && cvvBool && cardNumberBool) enableConfirmButton();
   // if (cardNameBool && cvvBool && cardNumberBool && dateBool) enableConfirmButton();
+}
+//#endregion
+
+//#region disable or enable previous months
+function disableOrEnableMonth(yearSel, monthSel, currYear) {
+  if (yearSel.value !== currYear) {
+    const disabledOptionsArr = monthSel.children;
+    for (let i = 0; i < disabledOptionsArr.length; i++) {
+      const option = disabledOptionsArr[i];
+      if (option.disabled) {
+        option.removeAttribute('disabled');
+        option.disabled = false;
+      } else {
+        break;
+      }
+    }
+  } else {
+    selectCurrentMonth();
+  }
 }
 //#endregion
