@@ -103,10 +103,10 @@ cvv.addEventListener('input', () => validator(regcvv, cvv));
 function validator(reg, inputField) {
   inputField.value = inputField.value.toUpperCase();
   if (inputField.id === "cvv" && inputField.value.length < 3) {
-    // FIX Confirm bytona trqbva da e disabled na pod 3 simvola
     inputField.classList.remove('error');
     inputField.classList.remove('passed');
     inputField.nextElementSibling.classList.add('hidden');
+    confirmBtn.classList.add('disabled');
     return;
   }
 
@@ -172,11 +172,11 @@ function cardValidationCheck() {
   amexImg.classList.add('hidden');
   masterImg.classList.add('hidden');
   visaImg.classList.add('hidden');
-  
+
   checkWhichCardImage(cardNumber.value);
 
   if (event.keyCode !== 8) addWhiteSpaces(cardNumber);
-  if(cardNumber.value.length < 13) return;
+  if (cardNumber.value.length < 13) return;
 
   if (!luhnCheck(cardNumber)) {
     cardNumber.classList.add('error');
