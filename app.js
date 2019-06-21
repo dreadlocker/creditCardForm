@@ -49,6 +49,11 @@ const helper = {
   date: {
     currentMonth: new Date().getMonth().toString(),
     currentYear: new Date().getFullYear().toString(),
+  },
+  regex: {
+    regName: /^[A-Z]{3,}\s[A-Z]{3,}$/,
+    regCVV: /^(\d{3,4})$/,
+    twoNamesRegex:  /.{3,}\s.{3,}/,
   }
 };
 //#endregion
@@ -103,6 +108,7 @@ function resetAllInputs() {
   resetHelperBools();
 
   helper.getDomElements.confirmBtn.classList.add('disabled');
+  helper.getDomElements.confirmBtn.setAttribute("disabled", "disabled");
   helper.getDomElements.confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
 }
 //#endregion
@@ -141,6 +147,14 @@ function resetHelperBools() {
 helper.getDomElements.confirmBtn.addEventListener('click', submitAllInputs);
 
 function submitAllInputs() {
+  if (document.getElementsByClassName('passed').length !== document.getElementsByTagName('input').length) {
+    helper.getDomElements.confirmBtn.classList.add('disabled');
+    helper.getDomElements.confirmBtn.setAttribute("disabled", "disabled");
+    return;
+  }
+
+  helper.getDomElements.confirmBtn.classList.remove('disabled');
+  helper.getDomElements.confirmBtn.removeAttribute("disabled", "disabled");
   helper.getDomElements.creditCardFormWrapper.classList.add('hideWrapper');
   helper.getDomElements.success.classList.add('showSuccess');
   setTimeout(() => {
@@ -158,11 +172,8 @@ function preventEnterAndSpaceClick() {
 //#endregion
 
 //#region chech for valid card name && CVV
-const regName = /^[A-Z]{3,}\s[A-Z]{3,}$/;
-const regcvv = /^(\d{3,4})$/;
-const twoNamesRegex = /.{3,}\s.{3,}/;
-helper.getDomElements.cardName.addEventListener('input', () => validator(regName, helper.getDomElements.cardName));
-helper.getDomElements.cvv.addEventListener('input', () => validator(regcvv, helper.getDomElements.cvv));
+helper.getDomElements.cardName.addEventListener('input', () => validator(helper.regex.regName, helper.getDomElements.cardName));
+helper.getDomElements.cvv.addEventListener('input', () => validator(helper.regex.regCVV, helper.getDomElements.cvv));
 
 function validator(reg, inputField) {
   if (inputField.value === '' || (inputField.id === "cvv" && inputField.value.length < 3)) {
@@ -172,7 +183,7 @@ function validator(reg, inputField) {
   inputField.value = inputField.value.toUpperCase();
 
   if (inputField.id === 'cardName') {
-    if (twoNamesRegex.test(inputField.value)) {
+    if (helper.regex.twoNamesRegex.test(inputField.value)) {
       addOrRemoveError(reg, inputField);
     }
   } else { // inputField.id === 'cvv'
@@ -185,6 +196,7 @@ function validator(reg, inputField) {
 function resetForEmptyImput(inputField) {
   helper.bools[inputField.id] = false;
   helper.getDomElements.confirmBtn.classList.add('disabled');
+  helper.getDomElements.confirmBtn.setAttribute("disabled", "disabled");
   return removeBorderAndErrorMessage(inputField);
 }
 //#endregion
@@ -196,6 +208,7 @@ function addOrRemoveError(reg, inputField) {
     inputField.classList.add('error');
     inputField.classList.remove('passed');
     helper.getDomElements.confirmBtn.classList.add('disabled');
+    helper.getDomElements.confirmBtn.setAttribute("disabled", "disabled");
     helper.getDomElements.confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
     return;
   }
@@ -219,6 +232,7 @@ function removeBorderAndErrorMessage(inputField) {
 //#region enable Confirm Button
 function enableConfirmButton() {
   helper.getDomElements.confirmBtn.classList.remove('disabled');
+  helper.getDomElements.confirmBtn.removeAttribute("disabled", "disabled");
   helper.getDomElements.confirmBtn.removeEventListener('keydown', preventEnterAndSpaceClick);
 }
 //#endregion
@@ -250,6 +264,7 @@ function cardValidationCheck() {
     helper.getDomElements.cardNumber.classList.add('error');
     helper.getDomElements.cardNumber.classList.remove('passed');
     helper.getDomElements.confirmBtn.classList.add('disabled');
+    helper.getDomElements.confirmBtn.setAttribute("disabled", "disabled");
     helper.getDomElements.confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
     helper.getDomElements.cardNumber.nextElementSibling.classList.remove('hidden');
     return;
