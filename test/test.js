@@ -7,29 +7,29 @@ const assert = chai.assert;
 describe('CONFIRM PURCHASE PROJECT:', function() {
   describe('Labels:', function() {
     describe('Card Holder Name', function() {
-      const ownerLabel = document.getElementById('ownerLabel');
-      it('owner label should exist', function() {
-        assert.notEqual(ownerLabel, null);
+      const cardNameLabel = document.getElementById('ownerLabel');
+      it('cardName label should exist', function() {
+        assert.notEqual(cardNameLabel, null);
       });
-      it('owner label should have text', function() {
-        assert.equal(ownerLabel.innerHTML, 'Card Holder Name');
+      it('cardName label should have text', function() {
+        assert.equal(cardNameLabel.innerHTML, 'Card Holder Name');
       });
     });
     describe('CVV', function() {
       const cvvLabel = document.getElementById('cvvLabel');
-      it('owner label should exist', function() {
+      it('cardName label should exist', function() {
         assert.notEqual(cvvLabel, null);
       });
-      it('owner label should have text', function() {
+      it('cardName label should have text', function() {
         assert.equal(cvvLabel.innerHTML, 'CVV');
       });
     });
     describe('Card Number', function() {
       const cardNumberLabel = document.getElementById('cardNumberLabel');
-      it('owner label should exist', function() {
+      it('cardName label should exist', function() {
         assert.notEqual(cardNumberLabel, null);
       });
-      it('owner label should have text', function() {
+      it('cardName label should have text', function() {
         assert.equal(cardNumberLabel.innerHTML, 'Card Number');
       });
     });
@@ -37,7 +37,7 @@ describe('CONFIRM PURCHASE PROJECT:', function() {
 
   describe('Input Fields:', function() {
     describe('Name on Card', function() {
-      const nameOnCardElement = document.getElementById('owner');
+      const nameOnCardElement = document.getElementById('cardName');
       it('should be a string', function() {
         assert.equal(typeof(nameOnCardElement.value), 'string');
       });

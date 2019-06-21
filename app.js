@@ -1,138 +1,215 @@
-//#region select current year on page load
-(function selectCurrentYear() {
-  const selectedYear = document.getElementById('year');
-  const HTMLOptionsCollectionArr = selectedYear.options;
-  const currentYear = new Date().getFullYear().toString();
+/**
+ * Rules - per cc name;
+ * example: 1) starts with; 2) max digit lenght;
+ * all - luhn check;
+ * 
+ * 
+ */
 
-  for (let i = 0; i < HTMLOptionsCollectionArr.length; i++) {
-    const option = HTMLOptionsCollectionArr[i];
-    if (option.value === currentYear) {
-      selectedYear.options[i].selected = 'selected';
-      break;
-    }
-    option.setAttribute('disabled', 'disabled');
+//  const test = {
+//    validation: {
+
+//    },
+//    rules: {
+
+//    },
+//    resetInputs() {
+
+//    },
+//    submitInputs() {
+
+//    }
+//  }
+
+//#region helper object
+const helper = {
+  getDomElements: {
+    selectedYear: document.getElementById('year'),
+    selectedMonth: document.getElementById('month'),
+    creditCardFormWrapper: document.getElementById('creditCardForm'),
+    success: document.getElementById('success'),
+    cardName: document.getElementById('cardName'),
+    cvv: document.getElementById('cvv'),
+    cardNumber: document.getElementById('cardNumber'),
+    confirmBtn: document.getElementById('confirm'),
+    clearBtn: document.getElementById('clear'),
+    amexImg: document.getElementById('amex'),
+    masterImg: document.getElementById('master'),
+    visaImg: document.getElementById('visa'),
+    allErrors: document.getElementsByClassName('error'),
+    allPassed: document.getElementsByClassName('passed'),
+    errorP: document.getElementsByClassName('errorP'),
+    creditCardChildren: document.getElementById('credit_cards').children,
+  },
+  bools: {
+    cardName: false,
+    cvv: false,
+    cardNumber: false,
+  },
+  date: {
+    currentMonth: new Date().getMonth().toString(),
+    currentYear: new Date().getFullYear().toString(),
   }
-})();
+};
 //#endregion
 
 //#region select current month on page load
-function selectCurrentMonth() {
-  const selectedMonth = document.getElementById('month');
-  const HTMLOptionsCollectionArr = selectedMonth.options;
-  const getCurrentMounth = new Date().getMonth().toString();
-  // const currentYear = new Date().getFullYear().toString();
+function disablePreviousMonthsOfCurrentYear() {
+  const HTMLOptionsCollectionArr = helper.getDomElements.selectedMonth.options;
 
   for (let i = 0; i < HTMLOptionsCollectionArr.length; i++) {
     const option = HTMLOptionsCollectionArr[i];
-    if (option.value === getCurrentMounth) {
-      selectedMonth.options[i].selected = 'selected';
+    if (option.value === helper.date.currentMonth) {
       break;
     }
 
     option.setAttribute('disabled', 'disabled');
   }
-  return selectedMonth.options[getCurrentMounth].selected = "selected";
+}
+disablePreviousMonthsOfCurrentYear();
+//#endregion
+
+//#region select current month of current year
+function selectCurrentMonth() {
+  return helper.getDomElements.selectedMonth.options[helper.date.currentMonth].selected = "selected";
 }
 selectCurrentMonth();
 //#endregion
 
-//#region animation
-const creditCardFormWrapper = document.getElementById('creditCardForm');
-const success = document.getElementById('success');
+//#region select current year on page load
+function selectCurrentYear() {
+  const HTMLOptionsCollectionArr = helper.getDomElements.selectedYear.options;
 
-//#region get 3 input fields
-const cardName = document.getElementById('owner');
-const cvv = document.getElementById('cvv');
-const cardNumber = document.getElementById('cardNumber');
+  for (let i = 0; i < HTMLOptionsCollectionArr.length; i++) {
+    const option = HTMLOptionsCollectionArr[i];
+    if (option.value === helper.date.currentYear) {
+      helper.getDomElements.selectedYear.options[i].selected = 'selected';
+      break;
+    }
+    option.setAttribute('disabled', 'disabled');
+  }
+};
+selectCurrentYear();
 //#endregion
 
 //#region Clear button action
-const clearBtn = document.getElementById('clear');
-clearBtn.addEventListener('click', clearAllInputs);
+helper.getDomElements.clearBtn.addEventListener('click', resetAllInputs);
 
-function clearAllInputs() {
-  cardName.value = '';
-  cvv.value = '';
-  cardNumber.value = '';
-  const allErrorsArr = Array.from(document.getElementsByClassName('error'));
-  const allPassedArr = Array.from(document.getElementsByClassName('passed'));
-  const errorPArr = Array.from(document.getElementsByClassName('errorP'));
-  const credit_cardsChildren = Array.from(document.getElementById('credit_cards').children);
+function resetAllInputs() {
+  clearAllInputFields();
+  clearAllErroPassedMessages();
+  disablePreviousMonthsOfCurrentYear();
+  selectCurrentYear();
+  resetHelperBools();
+
+  helper.getDomElements.confirmBtn.classList.add('disabled');
+  helper.getDomElements.confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
+}
+//#endregion
+
+//#region empty all input fields
+function clearAllInputFields() {
+  helper.getDomElements.cardName.value = '';
+  helper.getDomElements.cvv.value = '';
+  helper.getDomElements.cardNumber.value = '';
+}
+//#endregion
+
+//#region clear all input fields styles
+function clearAllErroPassedMessages() {
+  const allErrorsArr = Array.from(helper.getDomElements.allErrors);
+  const allPassedArr = Array.from(helper.getDomElements.allPassed);
+  const errorPArr = Array.from(helper.getDomElements.errorP);
+  const creditCardChildren = Array.from(helper.getDomElements.creditCardChildren);
 
   for (const iterator of allErrorsArr) iterator.classList.remove('error');
   for (const iterator of allPassedArr) iterator.classList.remove('passed');
   for (const iterator of errorPArr) iterator.classList.add('hidden');
-  for (const iterator of credit_cardsChildren) iterator.classList.add('hidden');
+  for (const iterator of creditCardChildren) iterator.classList.add('hidden');
+}
+//#endregion
 
-  cardNameBool = false;
-  cvvBool = false;
-  cardNumberBool = false;
-  confirmBtn.classList.add('disabled');
-  confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
+//#region reset helper booleans
+function resetHelperBools() {
+  helper.bools.cardName = false;
+  helper.bools.cvv = false;
+  helper.bools.cardNumber = false;
 }
 //#endregion
 
 //#region Confirm button action
-const confirmBtn = document.getElementById('confirm');
+helper.getDomElements.confirmBtn.addEventListener('click', submitAllInputs);
+
+function submitAllInputs() {
+  helper.getDomElements.creditCardFormWrapper.classList.add('hideWrapper');
+  helper.getDomElements.success.classList.add('showSuccess');
+  setTimeout(() => {
+    creditCardForm.style.display = "none";
+  }, 900);
+}
+//#endregion
 
 //#region ignore clicking Confirm button with Enter or Space
-confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
+helper.getDomElements.confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
 
 function preventEnterAndSpaceClick() {
   if (event.keyCode === 13 || event.keyCode === 32) event.preventDefault();
 }
 //#endregion
 
-confirmBtn.addEventListener('click', submitAllInputs);
-
-function submitAllInputs() {
-  creditCardFormWrapper.classList.add('hideWrapper');
-  success.classList.add('showSuccess');
-  setTimeout(() => {
-    creditCardForm.style.display = "none";
-  }, 900);
-}
-//#endregion
-//#endregion
-
 //#region chech for valid card name && CVV
 const regName = /^[A-Z]{3,}\s[A-Z]{3,}$/;
 const regcvv = /^(\d{3,4})$/;
-cardName.addEventListener('input', () => validator(regName, cardName));
-cvv.addEventListener('input', () => validator(regcvv, cvv));
+const twoNamesRegex = /.{3,}\s.{3,}/;
+helper.getDomElements.cardName.addEventListener('input', () => validator(regName, helper.getDomElements.cardName));
+helper.getDomElements.cvv.addEventListener('input', () => validator(regcvv, helper.getDomElements.cvv));
 
 function validator(reg, inputField) {
-  if (inputField.value === '') {
-    removeBorderAndErrorMessahe(inputField);
-    return;
+  if (inputField.value === '' || (inputField.id === "cvv" && inputField.value.length < 3)) {
+    return resetForEmptyImput(inputField);
   }
 
   inputField.value = inputField.value.toUpperCase();
-  if (inputField.id === "cvv" && inputField.value.length < 3) {
-    removeBorderAndErrorMessahe(inputField);
-    confirmBtn.classList.add('disabled');
-    return;
-  }
 
+  if (inputField.id === 'cardName') {
+    if (twoNamesRegex.test(inputField.value)) {
+      addOrRemoveError(reg, inputField);
+    }
+  } else { // inputField.id === 'cvv'
+    addOrRemoveError(reg, inputField);
+  }
+}
+//#endregion
+
+//#region reset bools, confirm button and field borders if it's empty
+function resetForEmptyImput(inputField) {
+  helper.bools[inputField.id] = false;
+  helper.getDomElements.confirmBtn.classList.add('disabled');
+  return removeBorderAndErrorMessage(inputField);
+}
+//#endregion
+
+//#region add or remove error of input field
+function addOrRemoveError(reg, inputField) {
   if (!reg.test(inputField.value)) {
     inputField.nextElementSibling.classList.remove('hidden');
     inputField.classList.add('error');
     inputField.classList.remove('passed');
-    confirmBtn.classList.add('disabled');
-    confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
+    helper.getDomElements.confirmBtn.classList.add('disabled');
+    helper.getDomElements.confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
     return;
   }
 
   inputField.nextElementSibling.classList.add('hidden');
   inputField.classList.remove('error');
   inputField.classList.add('passed');
-  (inputField.id === 'owner') ? cardNameBool = true: cvvBool = true;
-  if (cardNameBool && cvvBool && cardNumberBool) enableConfirmButton();
+  (inputField.id === 'cardName') ? helper.bools.cardName = true: helper.bools.cvv = true;
+  if (helper.bools.cardName && helper.bools.cvv && helper.bools.cardNumber) enableConfirmButton();
 }
 //#endregion
 
-//#region 
-function removeBorderAndErrorMessahe(inputField) {
+//#region remove border and error message
+function removeBorderAndErrorMessage(inputField) {
   inputField.classList.remove('error');
   inputField.classList.remove('passed');
   inputField.nextElementSibling.classList.add('hidden');
@@ -141,22 +218,9 @@ function removeBorderAndErrorMessahe(inputField) {
 
 //#region enable Confirm Button
 function enableConfirmButton() {
-  confirmBtn.classList.remove('disabled');
-  confirmBtn.removeEventListener('keydown', preventEnterAndSpaceClick);
+  helper.getDomElements.confirmBtn.classList.remove('disabled');
+  helper.getDomElements.confirmBtn.removeEventListener('keydown', preventEnterAndSpaceClick);
 }
-//#endregion
-
-//#region card bools
-let cardNameBool = false;
-let cvvBool = false;
-let cardNumberBool = false;
-//#endregion
-
-//#region card Images
-const allImages = document.getElementsByClassName('images');
-const amexImg = document.getElementById('amex');
-const masterImg = document.getElementById('master');
-const visaImg = document.getElementById('visa');
 //#endregion
 
 //#region add white spaces when typing in Card Number input field
@@ -167,52 +231,73 @@ function addWhiteSpaces(element) {
 }
 //#endregion
 
-//#region show proper card image
-function checkWhichCardImage(str) {
-  if (str[0] === '3') return amexImg.classList.remove('hidden');
-  if (str[0] === '4') return visaImg.classList.remove('hidden');
-  if (str[0] === '5') return masterImg.classList.remove('hidden');
-}
-//#endregion
-
 //#region card number validation
-cardNumber.addEventListener('input', cardValidationCheck);
+helper.getDomElements.cardNumber.addEventListener('keyup', cardValidationCheck);
 
 function cardValidationCheck() {
-  amexImg.classList.add('hidden');
-  masterImg.classList.add('hidden');
-  visaImg.classList.add('hidden');
+  hideCardImages();
+  doesnCreditCardExist();
+  checkWhichCardImage(helper.getDomElements.cardNumber.value);
 
-  checkWhichCardImage(cardNumber.value);
+  if (helper.getDomElements.cardNumber.value === '') {
+    resetForEmptyImput(helper.getDomElements.cardNumber);
+  };
+  if (helper.getDomElements.cardNumber.value.length > 19) helper.getDomElements.cardNumber.value = helper.getDomElements.cardNumber.value.slice(0, 19);
+  if (event.keyCode !== 8) addWhiteSpaces(helper.getDomElements.cardNumber);
+  if (helper.getDomElements.cardNumber.value.length < 13) return removeBorderAndErrorMessage(helper.getDomElements.cardNumber);
 
-  if (cardNumber.value.length > 19) cardNumber.value = cardNumber.value.slice(0, 19);
-  if (event.inputType !== 'deleteContentBackward') addWhiteSpaces(cardNumber);
-  if (cardNumber.value.length < 13) return removeBorderAndErrorMessahe(cardNumber);
-
-  if (!luhnCheck(cardNumber)) {
-    cardNumber.classList.add('error');
-    cardNumber.classList.remove('passed');
-    confirmBtn.classList.add('disabled');
-    confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
-    cardNumber.nextElementSibling.classList.remove('hidden');
+  if (!luhnCheck(helper.getDomElements.cardNumber)) {
+    helper.getDomElements.cardNumber.classList.add('error');
+    helper.getDomElements.cardNumber.classList.remove('passed');
+    helper.getDomElements.confirmBtn.classList.add('disabled');
+    helper.getDomElements.confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
+    helper.getDomElements.cardNumber.nextElementSibling.classList.remove('hidden');
     return;
   }
 
-  cardNumber.classList.remove('error');
-  cardNumber.classList.add('passed');
-  cardNumberBool = true;
-  cardNumber.nextElementSibling.classList.add('hidden');
-  if (cardNameBool && cvvBool && cardNumberBool) enableConfirmButton();
+  helper.getDomElements.cardNumber.classList.remove('error');
+  helper.getDomElements.cardNumber.classList.add('passed');
+  helper.bools.cardNumber = true;
+  helper.getDomElements.cardNumber.nextElementSibling.classList.add('hidden');
+  if (helper.bools.cardName && helper.bools.cvv && helper.bools.cardNumber) enableConfirmButton();
+}
+//#endregion
+
+//#region hide all card images
+function hideCardImages() {
+  helper.getDomElements.amexImg.classList.add('hidden');
+  helper.getDomElements.masterImg.classList.add('hidden');
+  helper.getDomElements.visaImg.classList.add('hidden');
+}
+//#endregion
+
+//#region error message if credit card doesn't exist
+function doesnCreditCardExist() {
+  const firstChar = helper.getDomElements.cardNumber.value[0];
+  if (firstChar !== '3' && firstChar !== '4' && firstChar !== '5' && firstChar !== undefined) {
+    helper.getDomElements.cardNumber.nextElementSibling.nextElementSibling.classList.remove('hidden');
+  } else {
+    helper.getDomElements.cardNumber.nextElementSibling.nextElementSibling.classList.add('hidden');
+  }
+
+}
+//#endregion
+
+//#region show proper card image
+function checkWhichCardImage(str) {
+  if (str[0] === '3') return helper.getDomElements.amexImg.classList.remove('hidden');
+  if (str[0] === '4') return helper.getDomElements.visaImg.classList.remove('hidden');
+  if (str[0] === '5') return helper.getDomElements.masterImg.classList.remove('hidden');
 }
 //#endregion
 
 //#region pated card number validation
-cardNumber.addEventListener('paste', pastedCardNumber);
+helper.getDomElements.cardNumber.addEventListener('paste', pastedCardNumber);
 
 function pastedCardNumber() {
   const clipboardData = event.clipboardData.getData('Text');
   setTimeout(() => {
-    cardNumber.value = '';
+    helper.getDomElements.cardNumber.value = '';
     this.value = clipboardData.match(/\d{4}/g).join(' ');
   }, 0);
 }
@@ -238,42 +323,17 @@ function luhnCheck(el) {
 }
 //#endregion
 
-//#region chech for valid date
-const expirationDate = document.getElementById('expiration-date');
-expirationDate.addEventListener('click', validationDate);
+//#region year butotn action
+helper.getDomElements.selectedYear.addEventListener('click', yearBtnClicked);
 
-function validationDate() {
-  const selectedYear = document.getElementById('year');
-  const selectedMonth = document.getElementById('month');
-  const currentYear = new Date().getFullYear().toString();
-
-  disableOrEnableMonth(selectedYear, selectedMonth, currentYear);
-
-  const getCurrentMounth = new Date().getMonth().toString();
-  const currentMonth = (getCurrentMounth.toString().length === 1) ? `0${getCurrentMounth + 1}` : getCurrentMounth + 1;
-  const currentMilliseconds = (new Date(`${currentMonth}/01//${currentYear}`).getTime());
-  const selectedMilliseconds = (new Date(`${selectedMonth.value}/01//${selectedYear.value}`).getTime());
-  const nextFiveYearsInMilliseconds = 159168240000;
-  const dateDifference = selectedMilliseconds - currentMilliseconds;
-  if (dateDifference < 0 || dateDifference >= nextFiveYearsInMilliseconds) {
-    selectedMonth.classList.add('error');
-    selectedYear.classList.add('error');
-    selectedMonth.classList.remove('passed');
-    selectedYear.classList.remove('passed');
-    confirmBtn.classList.add('disabled');
-    confirmBtn.addEventListener('keydown', preventEnterAndSpaceClick);
-    return;
-  }
-  selectedMonth.classList.remove('error');
-  selectedYear.classList.remove('error');
-  selectedMonth.classList.add('passed');
-  selectedYear.classList.add('passed');
-  if (cardNameBool && cvvBool && cardNumberBool) enableConfirmButton();
+function yearBtnClicked() {
+  disableOrEnableMonths(helper.getDomElements.selectedYear, helper.getDomElements.selectedMonth, helper.date.currentYear);
+  if (helper.getDomElements.selectedYear.value === helper.date.currentYear) selectCurrentMonth();
 }
 //#endregion
 
 //#region disable or enable previous months
-function disableOrEnableMonth(yearSel, monthSel, currYear) {
+function disableOrEnableMonths(yearSel, monthSel, currYear) {
   if (yearSel.value !== currYear) {
     const disabledOptionsArr = monthSel.children;
     for (let i = 0; i < disabledOptionsArr.length; i++) {
@@ -286,7 +346,7 @@ function disableOrEnableMonth(yearSel, monthSel, currYear) {
       }
     }
   } else {
-    selectCurrentMonth();
+    disablePreviousMonthsOfCurrentYear();
   }
 }
 //#endregion
