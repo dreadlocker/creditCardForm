@@ -371,7 +371,6 @@ function luhnCheck(el) {
 helper.getDomElements.selectedYear.addEventListener('change', yearBtnClicked);
 
 function yearBtnClicked() {
-    console.log('object');
   disableOrEnableMonths(helper.getDomElements.selectedYear, helper.getDomElements.selectedMonth, helper.date.currentYear);
   if (helper.getDomElements.selectedYear.value === helper.date.currentYear) selectCurrentMonth();
 }
