@@ -368,9 +368,10 @@ function luhnCheck(el) {
 //#endregion
 
 //#region year butotn action
-helper.getDomElements.selectedYear.addEventListener('click', yearBtnClicked);
+helper.getDomElements.selectedYear.addEventListener('change', yearBtnClicked);
 
 function yearBtnClicked() {
+    console.log('object');
   disableOrEnableMonths(helper.getDomElements.selectedYear, helper.getDomElements.selectedMonth, helper.date.currentYear);
   if (helper.getDomElements.selectedYear.value === helper.date.currentYear) selectCurrentMonth();
 }
@@ -398,4 +399,4 @@ function disableOrEnableMonths(yearSel, monthSel, currYear) {
   disablePreviousMonthsOfCurrentYear();
 }
 
-//#endregion+-
+//#endregion
