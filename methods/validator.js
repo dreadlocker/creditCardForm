@@ -1,4 +1,4 @@
-import regex from "../regex.js";
+import regex from "../helper/regex.js";
 import resetForEmptyImput from "./resetForEmptyImput.js";
 import addOrRemoveError from "./addOrRemoveError.js";
 

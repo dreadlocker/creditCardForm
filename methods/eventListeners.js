@@ -6,7 +6,7 @@ import cardValidationCheck from "./cardValidationCheck.js";
 import pastedCardNumber from "./pastedCardNumber.js";
 import yearBtnClicked from "./yearBtnClicked.js";
 import validator from "./validator.js";
-import regex from "../regex.js";
+import regex from "../helper/regex.js";
 
 //#region addEventListeners
 const eventListeners = () => {
